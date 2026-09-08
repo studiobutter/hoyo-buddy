@@ -116,9 +116,9 @@ class ExportButton(Button[GachaLogManageView]):
             "export_app_version": i.client.version,
             "version": "v4.2",
         }
-        
+
         is_genshin = self.view.account.game is Game.GENSHIN
-        
+
         game_info = {
             "uid": self.view.account.uid,
             "timezone": 0,
@@ -144,14 +144,14 @@ class ExportButton(Button[GachaLogManageView]):
 
         result: dict[str, Any] = {"info": info}
         result[UIGF_GAME_KEYS[self.view.account.game]] = [game_info]
-        
+
         if is_genshin:
             from hoyo_buddy.utils.gacha import fetch_mw_metadata
             from hoyo_buddy.constants import locale_to_hoyo_lang
-            
+
             lang = locale_to_hoyo_lang(self.view.locale)
             mw_metadata = await fetch_mw_metadata(lang)
-            
+
             hk4e_ugc = {
                 "uid": self.view.account.uid,
                 "timezone": 0,
@@ -160,15 +160,21 @@ class ExportButton(Button[GachaLogManageView]):
                     {
                         "id": str(x.wish_id),
                         "schedule_id": str(x.banner_id) if x.banner_id else "0",
-                        "item_type": mw_metadata.get(str(x.item_id), {}).get("type", "BEYOND_MATERIAL_COSTUME"),
+                        "item_type": mw_metadata.get(str(x.item_id), {}).get(
+                            "type", "BEYOND_MATERIAL_COSTUME"
+                        ),
                         "item_id": str(x.item_id),
-                        "item_name": mw_metadata.get(str(x.item_id), {}).get("name", "Unknown Item"),
+                        "item_name": mw_metadata.get(str(x.item_id), {}).get(
+                            "name", "Unknown Item"
+                        ),
                         "rank_type": str(x.rarity),
                         "time": x.time.astimezone(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S"),
-                        "op_gacha_type": str(x.banner_type)
+                        "op_gacha_type": str(x.banner_type),
                     }
-                    async for x in GachaHistory.filter(account=self.view.account, banner_type__in=MW_BANNER_TYPES)
-                ]
+                    async for x in GachaHistory.filter(
+                        account=self.view.account, banner_type__in=MW_BANNER_TYPES
+                    )
+                ],
             }
             if hk4e_ugc["list"]:
                 result["hk4e_ugc"] = [hk4e_ugc]

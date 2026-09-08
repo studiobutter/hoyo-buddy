@@ -44,10 +44,19 @@ async def _load_gacha_data(game: Game, locale: Locale) -> GachaData:
 
     if game is Game.GENSHIN:
         from hoyo_buddy.utils.gacha import fetch_mw_metadata
+
         mw_data = await fetch_mw_metadata(lang)
         for item_id, item_info in mw_data.items():
-            icon_url = f"https://ugc.studiobutter.io.vn/assets/{item_info['icon']}.png" if item_info.get("icon") else ""
-            data[str(item_id)] = {"name": item_info["name"], "icon": icon_url, "type": item_info.get("type", "")}
+            icon_url = (
+                f"https://ugc.studiobutter.io.vn/assets/{item_info['icon']}.png"
+                if item_info.get("icon")
+                else ""
+            )
+            data[str(item_id)] = {
+                "name": item_info["name"],
+                "icon": icon_url,
+                "type": item_info.get("type", ""),
+            }
 
     return data
 

@@ -411,10 +411,7 @@ class GachaCommand:
             records = [UIGFRecord(timezone=tz_hour, **record) for record in records]
 
         if is_v4 and account.game is Game.GENSHIN and "hk4e_ugc" in data:
-            ugc_data = next(
-                (d for d in data["hk4e_ugc"] if int(d["uid"]) == account.uid),
-                None,
-            )
+            ugc_data = next((d for d in data["hk4e_ugc"] if int(d["uid"]) == account.uid), None)
             if ugc_data:
                 tz_hour = ugc_data["timezone"]
                 for record in ugc_data["list"]:
@@ -425,7 +422,7 @@ class GachaCommand:
                             rank_type=record["rank_type"],
                             item_id=record["item_id"],
                             time=record["time"],
-                            id=record["id"]
+                            id=record["id"],
                         )
                     )
 

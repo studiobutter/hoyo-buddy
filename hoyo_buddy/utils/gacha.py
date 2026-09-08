@@ -248,7 +248,7 @@ async def calculate_gacha_stats(
 async def fetch_mw_metadata(lang: str) -> dict[str, dict[str, str]]:
     url_standard = f"https://ugc.studiobutter.io.vn/beyond/standard/{lang}.json"
     url_limited = f"https://ugc.studiobutter.io.vn/beyond/limited/{lang}.json"
-    
+
     data: dict[str, dict[str, str]] = {}
     async with aiohttp.ClientSession() as session:
         try:
@@ -257,12 +257,12 @@ async def fetch_mw_metadata(lang: str) -> dict[str, dict[str, str]]:
                     data.update(await r1.json())
         except aiohttp.ClientError as e:
             logger.warning(f"Failed to fetch MW standard metadata: {e}")
-            
+
         try:
             async with session.get(url_limited) as r2:
                 if r2.status == 200:
                     data.update(await r2.json())
         except aiohttp.ClientError as e:
             logger.warning(f"Failed to fetch MW limited metadata: {e}")
-            
+
     return data
