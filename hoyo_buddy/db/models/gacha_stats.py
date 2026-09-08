@@ -15,7 +15,9 @@ if TYPE_CHECKING:
 
 
 class GachaStats(BaseModel):
-    account_id = fields.IntField()
+    account: fields.ForeignKeyRelation[HoyoAccount] = fields.ForeignKeyField(
+        "models.HoyoAccount", related_name="gacha_stats"
+    )
     lifetime_pulls = fields.IntField()
     avg_5star_pulls = fields.FloatField()
     avg_4star_pulls = fields.FloatField()
